@@ -1,0 +1,44 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "node.fullname" . }}
+  labels:
+    app: {{ template "node.name" . }}
+    chart: {{ template "node.chart" . }}
+    release: "{{ .Release.Name }}"
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "node.name" . }}
+      release: "{{ .Release.Name }}"
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "node.name" . }}
+        chart: {{ template "node.chart" . }}
+        release: {{ .Release.Name | quote }}
+    spec:
+      containers:
+      - name: {{ template "node.fullname" . }}
+        image: "{{ template "node.image" . }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        ports:
+        - name: http
+          containerPort: {{ .Values.applicationPort }}
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 60
+          timeoutSeconds: 5
+          failureThreshold: 6
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 10
+          timeoutSeconds: 3
+          periodSeconds: 5
+        resources:
+{{ toYaml .Values.resources | indent 12 }}

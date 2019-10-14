@@ -1,0 +1,15 @@
+apiVersion: v1
+name: node
+version: 1.0.0
+appVersion: 10.16.3
+description: NodeJS helm charts.
+keywords:
+- node
+- javascript
+home: https://continua.sh
+sources:
+- https://github.com/srijanaravali/continua
+maintainers:
+  - name: Srijan
+    email: platform@srijan.net
+engine: gotpl
